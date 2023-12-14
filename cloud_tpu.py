@@ -11,7 +11,7 @@ for element,l in train_data:
 
 tf.config.list_physical_devices()
 
-cluster_resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
+cluster_resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu='local')
 print('Running on TPU ', cluster_resolver.cluster_spec().as_dict()['worker'])
 
 tf.config.experimental_connect_to_cluster(cluster_resolver)
