@@ -11,11 +11,12 @@ for element,l in train_data:
 
 tf.config.list_physical_devices()
 
-resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu='grpc://' + os.environ['COLAB_TPU_ADDR'])
-tf.config.experimental_connect_to_cluster(resolver)
-tf.tpu.experimental.initialize_tpu_system(resolver)
+cluster_resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
+print('Running on TPU ', cluster_resolver.cluster_spec().as_dict()['worker'])
 
-strategy = tf.distribute.TPUStrategy(resolver)
+tf.config.experimental_connect_to_cluster(cluster_resolver)
+tf.tpu.experimental.initialize_tpu_system(cluster_resolver)
+strategy = tf.distribute.experimental.TPUStrategy(cluster_resolver)
 
 # resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu='')
 # tf.config.experimental_connect_to_cluster(resolver)
@@ -34,7 +35,7 @@ class PrintMetricsCallback(tf.keras.callbacks.Callback):
         except:
             pass
 
-strategy = tf.distribute.TPUStrategy(resolver)
+strategy = tf.distribute.experimental.TPUStrategy(cluster_resolver)
 # Train the model
 epochs = 10
 
